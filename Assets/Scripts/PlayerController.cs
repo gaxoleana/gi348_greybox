@@ -7,6 +7,12 @@ public class PlayerMovement : MonoBehaviour
     public float runSpeed = 10f;
     public float jumpForce = 12f;
 
+    [Header("Variable Jump")]
+    [Tooltip("How much gravity is multiplied when falling or letting go of jump")]
+    public float fallMultiplier = 2.5f;
+    [Tooltip("Lower value = higher 'low' jump")]
+    public float lowJumpMultiplier = 2f;
+
     [Header("Detection")]
     public Transform groundCheck;
     public float groundCheckRadius = 0.2f;
@@ -23,13 +29,10 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // 1. Get horizontal input (A/D or Left/Right arrows)
         horizontalInput = Input.GetAxisRaw("Horizontal");
-
-        // 2. Ground Check (prevents infinite jumping)
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
-        // 3. Jumping
+        // 1. Initial Jump Trigger
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
@@ -38,20 +41,30 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 4. Movement Logic (FixedUpdate is better for physics)
         Move();
+        ApplyBetterJumpPhysics();
     }
 
     void Move()
     {
-        // Determine if we are running
         float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
-
-        // Apply movement velocity
         rb.linearVelocity = new Vector2(horizontalInput * currentSpeed, rb.linearVelocity.y);
 
-        // Optional: Flip the player sprite based on direction
         if (horizontalInput > 0) transform.localScale = new Vector3(1, 1, 1);
         else if (horizontalInput < 0) transform.localScale = new Vector3(-1, 1, 1);
+    }
+
+    void ApplyBetterJumpPhysics()
+    {
+        // 2. If we are falling, apply more gravity for a "snappier" feel
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+        }
+        // 3. If we are moving UP but NOT holding the jump button, fall faster (Short Hop)
+        else if (rb.linearVelocity.y > 0 && !Input.GetButton("Jump"))
+        {
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
+        }
     }
 }
