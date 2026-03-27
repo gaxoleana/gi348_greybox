@@ -2,11 +2,14 @@ using UnityEngine;
 
 public class TurretEnemy : MonoBehaviour
 {
+    [Header("Detection Settings")]
     public Transform player;
-    public GameObject projectilePrefab;
+    public float range = 8f;
+
+    [Header("Firing Settings")]
+    public GameObject bulletPrefab;
     public Transform firePoint;
-    public float fireRate = 2f;
-    public float rotationSpeed = 5f;
+    public float fireRate = 1.5f;
 
     private float nextFireTime;
 
@@ -14,13 +17,11 @@ public class TurretEnemy : MonoBehaviour
     {
         if (player == null) return;
 
-        // 1. Rotate to face the player (Smoothly)
-        Vector3 direction = player.position - transform.position;
-        Quaternion lookRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+        // Calculate distance to player
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        // 2. Shooting Logic
-        if (Time.time >= nextFireTime)
+        // Shoot if player is within range and cooldown is over
+        if (distanceToPlayer <= range && Time.time >= nextFireTime)
         {
             Shoot();
             nextFireTime = Time.time + fireRate;
@@ -29,6 +30,11 @@ public class TurretEnemy : MonoBehaviour
 
     void Shoot()
     {
-        Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        // Create the bullet at the FirePoint's position and rotation
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+        // Aim the bullet toward the player
+        Vector2 direction = (player.position - firePoint.position).normalized;
+        bullet.GetComponent<Rigidbody2D>().linearVelocity = direction * 10f;
     }
 }
