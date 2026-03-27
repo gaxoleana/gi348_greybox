@@ -3,24 +3,21 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Projectile : MonoBehaviour
 {
-    public float lifetime = 5f;
-
     void Start()
     {
-        // Physics-based projectiles handle their own cleanup
-        Destroy(gameObject, lifetime);
+        // Destroy after 3 seconds so they don't clutter the game
+        Destroy(gameObject, 3f);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Check for Player tag or Ground layer
-        if (collision.CompareTag("Player"))
+        // If it hits anything that isn't the Turret itself, destroy it
+        if (!collision.CompareTag("Enemy"))
         {
-            // Trigger player damage here
-            Destroy(gameObject);
-        }
-        else if (((1 << collision.gameObject.layer) & LayerMask.GetMask("Ground")) != 0)
-        {
+            if (collision.CompareTag("Player"))
+            {
+                Debug.Log("Ouch! Player Hit!");
+            }
             Destroy(gameObject);
         }
     }
