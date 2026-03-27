@@ -1,39 +1,25 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Projectile : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public float speed = 10f;
-    public float lifetime = 3f;
-
-    [Header("Impact Settings")]
-    public int damage = 1;
+    public float lifetime = 5f;
 
     void Start()
     {
-        // Automatically destroy the bullet after a set time if it doesn't hit anything
+        // Physics-based projectiles handle their own cleanup
         Destroy(gameObject, lifetime);
-    }
-
-    void Update()
-    {
-        // Moves the projectile forward based on its own "Up" or "Right" axis
-        // If your firePoint's red arrow (X) points at the player, use transform.right
-        transform.Translate(Vector2.right * speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Check if we hit the player (make sure your Player has the "Player" tag)
+        // Check for Player tag or Ground layer
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("Player Hit!");
-            // Add damage logic here if you have a health script
+            // Trigger player damage here
             Destroy(gameObject);
         }
-
-        // Destroy on impact with the environment/ground
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        else if (((1 << collision.gameObject.layer) & LayerMask.GetMask("Ground")) != 0)
         {
             Destroy(gameObject);
         }

@@ -2,14 +2,17 @@ using UnityEngine;
 
 public class TurretEnemy : MonoBehaviour
 {
-    [Header("Detection Settings")]
+    [Header("Detection")]
     public Transform player;
-    public float range = 8f;
+    public float range = 10f;
+    public LayerMask lineOfSightMask; // Should include 'Ground' to block vision
 
-    [Header("Firing Settings")]
+    [Header("Weaponry")]
     public GameObject bulletPrefab;
     public Transform firePoint;
-    public float fireRate = 1.5f;
+    public float projectileSpeed = 12f;
+    public float fireRate = 2f;
+    public float rotationSpeed = 5f;
 
     private float nextFireTime;
 
@@ -17,24 +20,45 @@ public class TurretEnemy : MonoBehaviour
     {
         if (player == null) return;
 
-        // Calculate distance to player
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+        float distance = Vector2.Distance(transform.position, player.position);
 
-        // Shoot if player is within range and cooldown is over
-        if (distanceToPlayer <= range && Time.time >= nextFireTime)
+        if (distance <= range && HasLineOfSight())
         {
-            Shoot();
-            nextFireTime = Time.time + fireRate;
+            RotateTowardsPlayer();
+
+            if (Time.time >= nextFireTime)
+            {
+                Shoot();
+                nextFireTime = Time.time + fireRate;
+            }
         }
+    }
+
+    void RotateTowardsPlayer()
+    {
+        Vector2 direction = (player.position - transform.position).normalized;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+        // Smoothly rotate the turret
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
+    bool HasLineOfSight()
+    {
+        // Prevents the turret from shooting you through walls
+        Vector2 direction = (player.position - transform.position).normalized;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, range, lineOfSightMask);
+
+        return hit.collider != null && hit.collider.CompareTag("Player");
     }
 
     void Shoot()
     {
-        // Create the bullet at the FirePoint's position and rotation
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
 
-        // Aim the bullet toward the player
-        Vector2 direction = (player.position - firePoint.position).normalized;
-        bullet.GetComponent<Rigidbody2D>().linearVelocity = direction * 10f;
+        // Use the turret's current facing direction for the shot
+        rb.linearVelocity = firePoint.right * projectileSpeed;
     }
 }
