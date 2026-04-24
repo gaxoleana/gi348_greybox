@@ -20,7 +20,6 @@ public class TurretEnemy : MonoBehaviour
 
         if (dist <= range)
         {
-            // Rotate Turret to face Player
             Vector2 direction = (player.position - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, angle);
@@ -37,8 +36,6 @@ public class TurretEnemy : MonoBehaviour
     {
         Vector2 direction = (player.position - firePoint.position).normalized;
 
-        // Calculate angle and SUBTRACT 90 degrees 
-        // (Use -90 if your triangle points UP, or +90 if it points DOWN)
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
 
         Quaternion bulletRotation = Quaternion.Euler(0, 0, angle);

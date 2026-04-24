@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3419307785835932869}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TurrentEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -46,9 +46,9 @@ GameObject:
   - component: {fileID: 1574039105546638117}
   - component: {fileID: 9064540875114546476}
   - component: {fileID: 3772605798514669097}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Base
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee76389ad3aa2b549a1d57858f22307b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurretEnemy
-  player: {fileID: 0}
+  player: {fileID: 2815543882925776952, guid: 2613b2f6a30c9b245b26ed40c2b5ecda, type: 3}
   bulletPrefab: {fileID: 794440768827511769, guid: a4d4655e8e88024479bc44ba37299009, type: 3}
   firePoint: {fileID: 4670108127721079383}
   range: 8

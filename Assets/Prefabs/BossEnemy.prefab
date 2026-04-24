@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 5975074488156499518}
   - component: {fileID: 2525471719183686024}
   - component: {fileID: 7461674115759440642}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BossEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -188,4 +188,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossPhaseTransition
   moveDistance: 22
   moveSpeed: 5
-  waitTime: 10
+  waitPhase1: 10
+  waitPhase2: 15
+  enemyTag: Enemy
