@@ -22,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
     private float horizontalInput;
     private bool isGrounded;
 
+    public bool canMove = true;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -29,6 +31,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (!canMove)
+        {
+            horizontalInput = 0; // ล้างค่า Input เพื่อให้ตัวละครหยุดเดิน
+            return;
+        }
+
         horizontalInput = Input.GetAxisRaw("Horizontal");
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
@@ -42,6 +50,11 @@ public class PlayerMovement : MonoBehaviour
     {
         Move();
         ApplyBetterJumpPhysics();
+        if (!canMove)
+        {
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            return;
+        }
     }
 
     void Move()
