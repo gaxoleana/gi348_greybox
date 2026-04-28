@@ -39,7 +39,9 @@ public class PlayerHealth : MonoBehaviour
     {
         Debug.Log("Player Died!");
 
-        string currentSceneName = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentSceneName);
+        CheckpointManager.instance.RespawnPlayer(gameObject);
+
+        currentHealth = maxHealth;
+        UpdateUI();
     }
 }
