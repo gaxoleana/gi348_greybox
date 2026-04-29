@@ -10,7 +10,7 @@ public class Zipline : MonoBehaviour
     private bool isZipping = false;
     private GameObject playerRef;
     private Rigidbody2D playerRb;
-    private PlayerMovement playerMove;
+    private PlayerController playerMove;
 
     void Update()
     {
@@ -37,7 +37,7 @@ public class Zipline : MonoBehaviour
     {
         playerRef = player;
         playerRb = player.GetComponent<Rigidbody2D>();
-        playerMove = player.GetComponent<PlayerMovement>();
+        playerMove = player.GetComponent<PlayerController>();
 
         isZipping = true;
 

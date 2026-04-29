@@ -7,8 +7,20 @@ public class PlayerShoot : MonoBehaviour
     public float fireRate = 0.2f;
     private float nextFireTime;
 
+    private PlayerController playerController;
+
+    void Start()
+    {
+        playerController = GetComponent<PlayerController>();
+    }
+
     void Update()
     {
+        if (playerController != null && !playerController.canMove)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0) && Time.time >= nextFireTime)
         {
             Shoot();

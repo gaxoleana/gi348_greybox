@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 2402963679248131119}
   - component: {fileID: 1574039105546638117}
   - component: {fileID: 9064540875114546476}
+  - component: {fileID: 8911302179374769589}
   - component: {fileID: 3772605798514669097}
   m_Layer: 7
   m_Name: Base
@@ -181,6 +182,20 @@ MonoBehaviour:
   range: 8
   fireRate: 1.5
   bulletSpeed: 10
+--- !u!114 &8911302179374769589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7430710624416966567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a6c51174e99c154ba72a7581c1f1255, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  maxHealth: 50
+  deathEffect: {fileID: 0}
 --- !u!120 &3772605798514669097
 LineRenderer:
   serializedVersion: 3

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StarSpawner : MonoBehaviour
+public class StarManager : MonoBehaviour
 {
     public GameObject[] starPrefabs;
     public int initialStarCount = 50;

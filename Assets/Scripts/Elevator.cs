@@ -6,6 +6,8 @@ public class SimpleElevator : MonoBehaviour
     public float targetHeight = 10f;
     private bool isMoving = false;
     private Vector3 startPosition;
+    private bool playerOnElevator = false;
+    private GameObject playerRef;
 
     void Start()
     {
@@ -14,6 +16,14 @@ public class SimpleElevator : MonoBehaviour
 
     void Update()
     {
+        if (playerOnElevator && !isMoving)
+        {
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                StartElevator();
+            }
+        }
+
         if (isMoving)
         {
             transform.Translate(Vector2.up * moveSpeed * Time.deltaTime);
@@ -29,12 +39,29 @@ public class SimpleElevator : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.transform.SetParent(transform);
+            playerRef = collision.gameObject;
+            playerOnElevator = true;
+        }
+    }
 
-            PlayerMovement movement = collision.gameObject.GetComponent<PlayerMovement>();
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            playerOnElevator = false;
+            if (!isMoving) playerRef = null;
+        }
+    }
+
+    void StartElevator()
+    {
+        isMoving = true;
+        if (playerRef != null)
+        {
+            playerRef.transform.SetParent(transform);
+
+            PlayerController movement = playerRef.GetComponent<PlayerController>();
             if (movement != null) movement.canMove = false;
-
-            isMoving = true;
         }
     }
 
@@ -42,11 +69,15 @@ public class SimpleElevator : MonoBehaviour
     {
         isMoving = false;
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        if (playerRef != null)
         {
-            player.transform.SetParent(null);
-            player.GetComponent<PlayerMovement>().canMove = true;
+            playerRef.transform.SetParent(null);
+
+            PlayerController movement = playerRef.GetComponent<PlayerController>();
+            if (movement != null) movement.canMove = true;
         }
+
+        playerOnElevator = false;
+        playerRef = null;
     }
 }

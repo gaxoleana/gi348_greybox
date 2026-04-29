@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ParallaxEffect : MonoBehaviour
+public class Parallax : MonoBehaviour
 {
     public Transform cam;
     public float parallaxFactor;
