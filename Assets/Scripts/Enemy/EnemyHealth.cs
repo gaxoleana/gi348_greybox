@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    public MiniBossManager bossManager;
+
     [Header("Health Stats")]
     public float maxHealth = 100f;
     private float currentHealth;
@@ -19,7 +21,6 @@ public class EnemyHealth : MonoBehaviour
         currentHealth -= damage;
         Debug.Log(gameObject.name + " took damage! Remaining: " + currentHealth);
 
-        // Check for death
         if (currentHealth <= 0)
         {
             Die();
@@ -28,13 +29,16 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
-        Debug.Log(gameObject.name + " destroyed!");
-
-        if (deathEffect != null)
+        if (bossManager != null)
         {
-            Instantiate(deathEffect, transform.position, Quaternion.identity);
+            bossManager.BossDefeated();
         }
 
         Destroy(gameObject);
+    }
+
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
     }
 }

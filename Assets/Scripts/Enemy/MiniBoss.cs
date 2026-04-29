@@ -48,6 +48,16 @@ public class MiniBoss : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
     }
 
+    void OnEnable()
+    {
+        if (player == null) player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        positionIndex = 0;
+
+        StopAllCoroutines();
+        StartCoroutine(BossRoutine());
+    }
+
     IEnumerator BossRoutine()
     {
         while (true)
