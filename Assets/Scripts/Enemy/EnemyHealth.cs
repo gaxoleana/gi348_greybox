@@ -55,7 +55,14 @@ public class EnemyHealth : MonoBehaviour
             bossManager.BossDefeated();
         }
 
-        Destroy(gameObject);
+        if (transform.parent != null && transform.parent.name == "BossMinion")
+        {
+            Destroy(transform.parent.gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void ResetHealth()

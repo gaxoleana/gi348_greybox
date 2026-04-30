@@ -4,21 +4,24 @@ public class BossManager : MonoBehaviour
 {
     public GameObject bossObject;
     public GameObject invisibleWalls;
-    public Transform bossSpawnPoint;
 
     private Vector3 initialBossPos;
     private bool bossActive = false;
+    private bool isDefeated = false;
 
     void Start()
     {
-        bossObject.SetActive(false);
+        if (bossObject != null)
+        {
+            bossObject.SetActive(false);
+            initialBossPos = bossObject.transform.position;
+        }
         invisibleWalls.SetActive(false);
-        initialBossPos = bossObject.transform.position;
     }
 
     public void ActivateBoss()
     {
-        if (bossActive) return;
+        if (bossActive || isDefeated) return;
 
         bossActive = true;
         bossObject.SetActive(true);
@@ -29,24 +32,56 @@ public class BossManager : MonoBehaviour
 
     public void ResetBoss()
     {
+        if (isDefeated) return;
+
+        bossActive = false;
+
+        if (invisibleWalls != null)
+            invisibleWalls.SetActive(false);
+
         if (bossObject != null)
         {
-            bossObject.SetActive(false);
-            bossObject.transform.position = initialBossPos;
+            MiniBoss mb = bossObject.GetComponent<MiniBoss>();
+            if (mb != null) mb.ResetBossState();
+
+            FinalBoss fb = bossObject.GetComponent<FinalBoss>();
+            if (fb != null) fb.ResetBossState();
 
             EnemyHealth eHealth = bossObject.GetComponent<EnemyHealth>();
             if (eHealth != null) eHealth.ResetHealth();
+
+            bossObject.transform.position = initialBossPos;
+
+            bossObject.SetActive(false);
         }
 
-        invisibleWalls.SetActive(false);
-        bossActive = false;
+        CleanupAndResetEnemies();
+    }
+
+    void CleanupAndResetEnemies()
+    {
+        GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        foreach (GameObject enemy in allEnemies)
+        {
+            if (enemy.name == "BossMinion")
+            {
+                Destroy(enemy);
+            }
+            else if (enemy != bossObject)
+            {
+                enemy.SetActive(true);
+                EnemyHealth eHealth = enemy.GetComponent<EnemyHealth>();
+                if (eHealth != null) eHealth.ResetHealth();
+            }
+        }
     }
 
     public void BossDefeated()
     {
+        isDefeated = true;
         bossActive = false;
-        invisibleWalls.SetActive(false);
-
-        Debug.Log("Victory! Walls cleared.");
+        if (invisibleWalls != null) invisibleWalls.SetActive(false);
+        Debug.Log("Victory!");
     }
 }

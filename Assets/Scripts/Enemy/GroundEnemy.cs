@@ -9,8 +9,12 @@ public class GroundEnemy : MonoBehaviour
     private int currentPointIndex = 0;
     private Rigidbody2D rb;
 
+    private Vector2 startPosition;
+
     void Start()
     {
+        startPosition = transform.position;
+
         rb = GetComponent<Rigidbody2D>();
 
         rb.freezeRotation = true;
@@ -19,7 +23,7 @@ public class GroundEnemy : MonoBehaviour
     void Update()
     {
         Patrol();
-    }
+    }   
 
     void Patrol()
     {
@@ -53,5 +57,12 @@ public class GroundEnemy : MonoBehaviour
                 health.TakeDamage(20f);
             }
         }
+    }
+
+    public void ResetEnemy()
+    {
+        transform.position = startPosition;
+        currentPointIndex = 0;
+        gameObject.SetActive(true);
     }
 }

@@ -1,7 +1,6 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System.Collections;
 public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth = 100f;
@@ -61,10 +60,14 @@ public class PlayerHealth : MonoBehaviour
     {
         Debug.Log("Player Died!");
 
-        BossManager bm = FindFirstObjectByType<BossManager>();
-        if (bm != null) bm.ResetBoss();
+        BossManager[] allManagers = Object.FindObjectsByType<BossManager>(FindObjectsSortMode.None);
+        foreach (BossManager bm in allManagers)
+        {
+            bm.ResetBoss();
+        }
 
-        CheckpointManager.instance.RespawnPlayer(gameObject);
+        if (CheckpointManager.instance != null)
+            CheckpointManager.instance.RespawnPlayer(gameObject);
 
         currentHealth = maxHealth;
         UpdateUI();

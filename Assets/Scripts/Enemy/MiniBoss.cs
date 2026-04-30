@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class MiniBoss : MonoBehaviour
 {
@@ -39,7 +39,7 @@ public class MiniBoss : MonoBehaviour
 
     void Update()
     {
-        if (player == null) return;
+        if (player == null || !gameObject.activeInHierarchy) return;
 
         Vector2 direction = (player.position - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -125,5 +125,16 @@ public class MiniBoss : MonoBehaviour
                 rb.linearVelocity = shootDir * bulletSpeed;
             }
         }
+    }
+
+    public void ResetBossState()
+    {
+        StopAllCoroutines();
+        positionIndex = 0;
+
+        targetPosition = transform.position;
+
+        if (bossSprite != null) bossSprite.color = originalColor;
+    transform.rotation = Quaternion.identity;
     }
 }

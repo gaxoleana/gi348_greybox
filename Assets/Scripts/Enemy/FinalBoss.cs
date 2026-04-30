@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class FinalBoss : MonoBehaviour
 {
@@ -19,6 +18,7 @@ public class FinalBoss : MonoBehaviour
     public float phase1FireRate = 1.5f;
     public float phase2FireRate = 0.1f;
     public float spawnInterval = 5f;
+    public float spawnRange = 15f;
 
     private EnemyHealth health;
     private float nextFireTime;
@@ -52,18 +52,42 @@ public class FinalBoss : MonoBehaviour
             nextFireTime = Time.time + phase1FireRate;
         }
 
-        if (Time.time >= nextSpawnTime)
+        float distToPlayer = Vector2.Distance(transform.position, player.position);
+
+        if (distToPlayer <= spawnRange && Time.time >= nextSpawnTime)
         {
-            SpawnGroundEnemies();
+            TrySpawnEnemies();
             nextSpawnTime = Time.time + spawnInterval;
         }
     }
 
-    void SpawnGroundEnemies()
+    void TrySpawnEnemies()
     {
-        foreach (Transform sp in groundEnemySpawnPoints)
+        GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+        int minionCount = 0;
+
+        foreach (GameObject enemy in allEnemies)
         {
-            if (sp != null) Instantiate(groundEnemyPrefab, sp.position, Quaternion.identity);
+            if (enemy.name == "BossMinion") minionCount++;
+        }
+
+        if (minionCount < 2)
+        {
+            int needToSpawn = 2 - minionCount;
+
+            for (int i = 0; i < needToSpawn; i++)
+            {
+                int randomIndex = Random.Range(0, groundEnemySpawnPoints.Length);
+                Transform sp = groundEnemySpawnPoints[randomIndex];
+
+                if (sp != null)
+                {
+                    Vector3 spawnPos = new Vector3(sp.position.x, sp.position.y, 0f);
+                    GameObject minion = Instantiate(groundEnemyPrefab, spawnPos, Quaternion.identity);
+
+                    minion.name = "BossMinion";
+                }
+            }
         }
     }
 
@@ -91,5 +115,14 @@ public class FinalBoss : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, point.position, Quaternion.identity);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null) rb.linearVelocity = direction * 15f;
+    }
+
+    public void ResetBossState()
+    {
+        isPhase2 = false;
+        clockwiseAngle = 0f;
+        nextFireTime = Time.time;
+        nextSpawnTime = Time.time;
+        Debug.Log("Final Boss Logic Reverted to Phase 1");
     }
 }
