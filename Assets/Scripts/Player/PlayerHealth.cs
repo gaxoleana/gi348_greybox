@@ -61,7 +61,7 @@ public class PlayerHealth : MonoBehaviour
     {
         Debug.Log("Player Died!");
 
-        MiniBossManager bm = FindFirstObjectByType<MiniBossManager>();
+        BossManager bm = FindFirstObjectByType<BossManager>();
         if (bm != null) bm.ResetBoss();
 
         CheckpointManager.instance.RespawnPlayer(gameObject);

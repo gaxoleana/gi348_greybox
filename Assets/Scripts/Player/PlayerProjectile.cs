@@ -4,7 +4,7 @@ public class PlayerProjectile : MonoBehaviour
 {
     public float speed = 15f;
     public float lifeTime = 1f;
-    public float damage = 20f;
+    public float damage = 35f;
 
     private float direction = 1f;
 
@@ -42,6 +42,16 @@ public class PlayerProjectile : MonoBehaviour
             {
                 health.TakeDamage(damage);
             }
+            Destroy(gameObject);
+        }
+
+        if (collision.CompareTag("Ground"))
+        {
+            Destroy(gameObject);
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
             Destroy(gameObject);
         }
     }

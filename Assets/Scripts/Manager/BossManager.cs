@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MiniBossManager : MonoBehaviour
+public class BossManager : MonoBehaviour
 {
     public GameObject bossObject;
     public GameObject invisibleWalls;

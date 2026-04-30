@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 750856512183320684}
   - component: {fileID: 5975074488156499518}
   - component: {fileID: 2525471719183686024}
-  - component: {fileID: 7461674115759440642}
   m_Layer: 7
   m_Name: BossEnemy
   m_TagString: Enemy
@@ -85,7 +84,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2135585597343286014, guid: 5aa8b770bc43046bc8d993d0d5b7f4a5, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.5803922, g: 0, b: 0.8274511, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -174,20 +173,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7461674115759440642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3671452726603987068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10896fb05cd0ea24a8e18159ea984951, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossPhaseTransition
-  moveDistance: 22
-  moveSpeed: 5
-  waitPhase1: 10
-  waitPhase2: 15
-  enemyTag: Enemy

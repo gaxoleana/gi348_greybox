@@ -1,19 +1,27 @@
 using UnityEngine;
+using System.Collections; // Required for Coroutines
 
 public class EnemyHealth : MonoBehaviour
 {
-    public MiniBossManager bossManager;
+    public BossManager bossManager;
 
     [Header("Health Stats")]
     public float maxHealth = 100f;
     private float currentHealth;
 
-    [Header("Visual Effects (Optional)")]
-    public GameObject deathEffect;
+    [Header("Visual Effects")]
+    public SpriteRenderer enemySprite;
+    public Color damageColor = Color.red;
+    public float flashDuration = 0.1f;
+    private Color originalColor;
 
     void Start()
     {
         currentHealth = maxHealth;
+        if (enemySprite != null)
+        {
+            originalColor = enemySprite.color;
+        }
     }
 
     public void TakeDamage(float damage)
@@ -21,9 +29,22 @@ public class EnemyHealth : MonoBehaviour
         currentHealth -= damage;
         Debug.Log(gameObject.name + " took damage! Remaining: " + currentHealth);
 
+        StopCoroutine(FlashRed());
+        StartCoroutine(FlashRed());
+
         if (currentHealth <= 0)
         {
             Die();
+        }
+    }
+
+    IEnumerator FlashRed()
+    {
+        if (enemySprite != null)
+        {
+            enemySprite.color = damageColor;
+            yield return new WaitForSeconds(flashDuration);
+            enemySprite.color = originalColor;
         }
     }
 
@@ -40,5 +61,10 @@ public class EnemyHealth : MonoBehaviour
     public void ResetHealth()
     {
         currentHealth = maxHealth;
+    }
+
+    public float GetCurrentHealthPercentage()
+    {
+        return currentHealth / maxHealth;
     }
 }
