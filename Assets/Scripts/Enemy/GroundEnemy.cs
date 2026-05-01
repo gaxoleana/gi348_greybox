@@ -11,6 +11,9 @@ public class GroundEnemy : MonoBehaviour
 
     private Vector2 startPosition;
 
+    [SerializeField] private Animator animator;
+
+
     void Start()
     {
         startPosition = transform.position;
