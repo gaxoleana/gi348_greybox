@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     private float horizontalInput;
     private bool isGrounded;
 
+    [SerializeField] private Animator animator;
+
     public bool canMove = true;
 
     void Awake()
@@ -75,8 +77,19 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        float currentSpeed = isRunning ? runSpeed : walkSpeed;
         rb.linearVelocity = new Vector2(horizontalInput * currentSpeed, rb.linearVelocity.y);
+        if (horizontalInput != 0)
+        {
+            animator.SetBool("isWalk", true);
+            animator.SetBool("isRun", isRunning);
+        }
+        else
+        {
+            animator.SetBool("isWalk", false);
+            animator.SetBool("isRun", false);
+        }
     }
 
     void ApplyBetterJumpPhysics()
