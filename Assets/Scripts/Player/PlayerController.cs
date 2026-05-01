@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!canMove)
         {
-            horizontalInput = 0; // ล้างค่า Input เพื่อให้ตัวละครหยุดเดิน
+            horizontalInput = 0;
             return;
         }
 
@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
+
+        HandleSpriteFlip();
     }
 
     void FixedUpdate()
@@ -57,13 +59,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void HandleSpriteFlip()
+    {
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        if (mousePos.x > transform.position.x)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        else if (mousePos.x < transform.position.x)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+    }
+
     void Move()
     {
         float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
         rb.linearVelocity = new Vector2(horizontalInput * currentSpeed, rb.linearVelocity.y);
-
-        if (horizontalInput > 0) transform.localScale = new Vector3(1, 1, 1);
-        else if (horizontalInput < 0) transform.localScale = new Vector3(-1, 1, 1);
     }
 
     void ApplyBetterJumpPhysics()
